@@ -10,8 +10,14 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+}
+
+val redmiOnly = providers.gradleProperty("redmiLocal").orNull == "true"
+if (!redmiOnly) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.firebase.crashlytics.get().pluginId)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -37,6 +43,7 @@ android {
 
     defaultConfig {
         applicationId = project.property("APP_ID").toString()
+        manifestPlaceholders["appInstallLocation"] = "auto"
         minSdk = project.libs.versions.app.build.minimumSDK.get().toInt()
         targetSdk = project.libs.versions.app.build.targetSDK.get().toInt()
         versionName = project.property("VERSION_NAME").toString()
@@ -98,10 +105,19 @@ android {
             versionCode = 25
             versionName = "7.0.4"
         }
+        register("redmi") {
+            applicationId = "org.traccar.gateway.redmi"
+            manifestPlaceholders["appInstallLocation"] = "internalOnly"
+            versionCode = 33
+            versionName = "7.0.4-plus.1"
+        }
     }
 
     sourceSets {
         getByName("main").java.directories.add("src/main/kotlin")
+        getByName("traccar").kotlin.directories.add("src/gateway/kotlin")
+        getByName("redmi").kotlin.directories.add("src/gateway/kotlin")
+        getByName("redmi").res.directories.add("src/traccar/res")
     }
 
     compileOptions {
@@ -143,6 +159,10 @@ android {
 }
 
 androidComponents {
+    beforeVariants { variant ->
+        val isRedmi = variant.productFlavors.any { it.second == "redmi" }
+        variant.enable = redmiOnly == isRedmi
+    }
     onVariants { variant ->
         variant.instrumentation.transformClassesWith(
             FakeVersionCheckStripper::class.java,
@@ -180,6 +200,12 @@ dependencies {
     "traccarImplementation"(libs.jetty.server) {
         exclude(group = "org.eclipse.jetty.orbit", module = "javax.servlet")
     }
+    "redmiImplementation"(libs.javax.servlet)
+    "redmiImplementation"(libs.jetty.server) {
+        exclude(group = "org.eclipse.jetty.orbit", module = "javax.servlet")
+    }
+    "testRedmiImplementation"("junit:junit:4.13.2")
+    "testRedmiImplementation"("org.robolectric:robolectric:4.16.1")
     "traccarImplementation"(platform(libs.firebase.bom))
     "traccarImplementation"(libs.firebase.analytics)
     "traccarImplementation"(libs.firebase.crashlytics)

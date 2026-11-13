@@ -1,0 +1,16 @@
+<resources>
+    <string name="redmi_launcher_name" translatable="false">Traccar SMS Gateway Plus</string>
+    <string name="app_name">@string/redmi_launcher_name</string>
+    <string name="redmi_enable">Enable service</string>
+    <string name="redmi_service_title">Local SMS gateway enabled</string>
+    <string name="redmi_stopped">HTTP server stopped</string>
+    <string name="redmi_starting">Starting HTTP server…</string>
+    <string name="redmi_running">HTTP server ready</string>
+    <string name="redmi_retrying">HTTP server unavailable. Retrying…</string>
+    <string name="redmi_import_key">Import the HTTP key</string>
+    <string name="redmi_invalid_key">Enter the API key shown in the official app.</string>
+    <string name="redmi_settings_error">Unable to save the gateway settings.</string>
+    <string name="redmi_diagnostics">Diagnostic journal</string>
+    <string name="redmi_journal_empty">No events recorded.</string>
+    <string name="redmi_journal_error">Unable to read the diagnostic journal.</string>
+</resources>

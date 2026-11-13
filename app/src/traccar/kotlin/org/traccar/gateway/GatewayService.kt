@@ -75,13 +75,13 @@ class GatewayService : Service(), GatewayServer.Handler {
         return null
     }
 
-    override fun onSendMessage(phone: String, message: String, slot: Int?): String? {
+    override fun onSendMessage(phone: String, message: String, slot: Int?): GatewayServer.Submission {
         return try {
             GatewayServiceUtil.sendMessage(this, phone, message, slot)
-            null
+            GatewayServer.Submission()
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-            e.message
+            GatewayServer.Submission(error = e.message ?: "Unable to submit SMS")
         }
     }
 

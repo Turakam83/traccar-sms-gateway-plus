@@ -386,6 +386,12 @@ class ThreadAdapter(
                 setupSentMessageView(messageBinding = this, message = message)
             }
 
+            threadMessageReactions.apply {
+                text = message.displayedReactions.joinToString(" ")
+                beVisibleIf(message.displayedReactions.isNotEmpty())
+                setTextColor(textColor)
+            }
+
             if (message.attachment?.attachments?.isNotEmpty() == true) {
                 threadMessageAttachmentsHolder.beVisible()
                 threadMessageAttachmentsHolder.removeAllViews()

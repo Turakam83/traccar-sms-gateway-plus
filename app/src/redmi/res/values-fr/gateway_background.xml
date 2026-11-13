@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="gateway_background_setup">Configurer le fonctionnement en arrière-plan</string>
+    <string name="gateway_background_open_settings">Ouvrir les réglages</string>
+    <string name="gateway_background_skip">Passer</string>
+    <string name="gateway_background_miui_battery">Dans les réglages de batterie de Traccar SMS Gateway Plus, sélectionne Sans restriction. Si la fiche de l’application s’ouvre, cherche Économiseur de batterie ou Batterie.</string>
+    <string name="gateway_background_miui_autostart">Dans Démarrage automatique, active Traccar SMS Gateway Plus. Si le raccourci ouvre la fiche de l’application, cherche ce réglage dans la fiche ou dans Paramètres → Applications → Autorisations.</string>
+    <string name="gateway_background_exempt">L’exemption d’optimisation de la batterie Android est active.</string>
+    <string name="gateway_background_optimized">L’exemption d’optimisation de la batterie Android est inactive.</string>
+    <string name="gateway_background_miui_summary">Vérifie que Sans restriction et Démarrage automatique sont activés dans les réglages Xiaomi. Ces réglages sont à confirmer manuellement.</string>
+    <string name="gateway_background_generic">Si ton téléphone applique des limites supplémentaires, ouvre la fiche de l’application et cherche Batterie ou Activité en arrière-plan.</string>
+</resources>

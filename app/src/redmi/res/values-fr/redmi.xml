@@ -1,0 +1,14 @@
+<resources>
+    <string name="redmi_enable">Activer le service</string>
+    <string name="redmi_service_title">Passerelle SMS locale activée</string>
+    <string name="redmi_stopped">Serveur HTTP arrêté</string>
+    <string name="redmi_starting">Démarrage du serveur HTTP…</string>
+    <string name="redmi_running">Serveur HTTP prêt</string>
+    <string name="redmi_retrying">Serveur HTTP indisponible. Nouvelle tentative prévue…</string>
+    <string name="redmi_import_key">Importer la clé HTTP</string>
+    <string name="redmi_invalid_key">Saisis la clé API affichée dans l’application officielle.</string>
+    <string name="redmi_settings_error">Impossible d’enregistrer les réglages de la passerelle.</string>
+    <string name="redmi_diagnostics">Journal de diagnostic</string>
+    <string name="redmi_journal_empty">Aucun événement enregistré.</string>
+    <string name="redmi_journal_error">Impossible de lire le journal de diagnostic.</string>
+</resources>

@@ -65,5 +65,19 @@
             android:textSize="@dimen/normal_text_size"
             tools:drawableEndCompat="@drawable/scheduled_message_icon"
             tools:text="Message content" />
+
+        <TextView
+            android:id="@+id/thread_message_reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/thread_message_body"
+            android:layout_below="@id/thread_message_body"
+            android:layout_marginTop="-7dp"
+            android:background="@drawable/thread_message_reaction_background"
+            android:elevation="1dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:textSize="14sp"
+            android:visibility="gone" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

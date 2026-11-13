@@ -64,6 +64,8 @@ import org.fossify.messages.extensions.conversationsDB
 import org.fossify.messages.extensions.getConversations
 import org.fossify.messages.extensions.getMessages
 import org.fossify.messages.extensions.insertOrUpdateConversation
+import org.fossify.messages.extensions.getUnreadCountsByThread
+import org.fossify.messages.extensions.markThreadMessagesRead
 import org.fossify.messages.extensions.messagesDB
 import org.fossify.messages.helpers.SEARCHED_MESSAGE_ID
 import org.fossify.messages.helpers.THREAD_ID
@@ -84,6 +86,8 @@ class MainActivity : SimpleActivity() {
     private var storedTextColor = 0
     private var storedFontSize = 0
     private var lastSearchedText = ""
+    private var hasUnreadMessages = false
+    private var markingAllAsRead = false
     private var bus: EventBus? = null
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
@@ -187,6 +191,7 @@ class MainActivity : SimpleActivity() {
 
         binding.mainMenu.requireToolbar().setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.mark_all_as_read -> markAllAsRead()
                 R.id.show_recycle_bin -> launchRecycleBin()
                 R.id.show_archived -> launchArchivedConversations()
                 R.id.settings -> launchSettings()
@@ -200,8 +205,30 @@ class MainActivity : SimpleActivity() {
 
     private fun refreshMenuItems() {
         binding.mainMenu.requireToolbar().menu.apply {
+            findItem(R.id.mark_all_as_read).isEnabled = hasUnreadMessages && !markingAllAsRead
             findItem(R.id.show_recycle_bin).isVisible = config.useRecycleBin
             findItem(R.id.show_archived).isVisible = config.isArchiveAvailable
+        }
+    }
+
+    private fun markAllAsRead() {
+        if (!hasUnreadMessages || markingAllAsRead) return
+        markingAllAsRead = true
+        refreshMenuItems()
+        ensureBackgroundThread {
+            val result = runCatching {
+                val unreadThreadIds = getUnreadCountsByThread().keys +
+                    conversationsDB.getUnreadConversations().map { it.threadId }
+                unreadThreadIds.forEach { markThreadMessagesRead(it) }
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                markingAllAsRead = false
+                hasUnreadMessages = false
+                refreshMenuItems()
+                if (result.isFailure) toast(org.fossify.commons.R.string.unknown_error_occurred)
+                getCachedConversations()
+            }
         }
     }
 
@@ -376,7 +403,10 @@ class MainActivity : SimpleActivity() {
             }
 
             val allConversations = conversationsDB.getNonArchived() as ArrayList<Conversation>
+            val hasUnread = getUnreadCountsByThread().isNotEmpty() || conversationsDB.getUnreadConversations().isNotEmpty()
             runOnUiThread {
+                hasUnreadMessages = hasUnread
+                refreshMenuItems()
                 setupConversations(allConversations)
             }
 

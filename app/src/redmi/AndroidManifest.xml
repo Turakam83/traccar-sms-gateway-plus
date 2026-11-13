@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+
+    <queries tools:node="remove" />
+
+    <application android:label="@string/redmi_launcher_name" tools:replace="android:label">
+        <activity android:name="org.traccar.gateway.GatewayActivity" android:exported="false" />
+        <service android:name="org.traccar.gateway.GatewayService"
+            android:exported="false" android:foregroundServiceType="remoteMessaging" />
+        <receiver android:name="org.traccar.gateway.GatewayBootReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.traccar.gateway.GatewaySmsResultReceiver" android:exported="false" />
+    </application>
+</manifest>

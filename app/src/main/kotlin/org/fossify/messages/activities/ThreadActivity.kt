@@ -188,6 +188,7 @@ import org.fossify.messages.models.Attachment
 import org.fossify.messages.models.AttachmentSelection
 import org.fossify.messages.models.Conversation
 import org.fossify.messages.models.Events
+import org.fossify.messages.helpers.SmsReactions
 import org.fossify.messages.models.Message
 import org.fossify.messages.models.MessageAttachment
 import org.fossify.messages.models.SIMCard
@@ -683,7 +684,9 @@ class ThreadActivity : SimpleActivity() {
         fromRecycleBin: Boolean,
     ) {
         val deletePosition = threadItems.indexOf(messagesToRemove.first())
-        messages.removeAll(messagesToRemove.toSet())
+        val affectedMessages = SmsReactions.includeAttachedReactions(messages, messagesToRemove)
+        val affectedIds = affectedMessages.mapTo(mutableSetOf()) { it.getStableId() }
+        messages.removeAll { it.getStableId() in affectedIds }
         threadItems = getThreadItems()
 
         runOnUiThread {
@@ -697,7 +700,7 @@ class ThreadActivity : SimpleActivity() {
             }
         }
 
-        messagesToRemove.forEach { message ->
+        affectedMessages.forEach { message ->
             val messageId = message.id
             if (message.isScheduled) {
                 deleteScheduledMessage(messageId)
@@ -1287,9 +1290,15 @@ class ThreadActivity : SimpleActivity() {
         var prevDateTime = 0
         var prevSIMId = -2
         var hadUnreadItems = false
-        val cnt = messages.size
-        for (i in 0 until cnt) {
-            val message = messages.getOrNull(i) ?: continue
+        for (message in messages) {
+            if (!message.read) {
+                hadUnreadItems = true
+                markMessageRead(message.id, message.isMMS)
+                conversationsDB.markRead(threadId)
+            }
+        }
+        val displayedMessages = SmsReactions.attachToEarlierMessages(messages)
+        for ((i, message) in displayedMessages.withIndex()) {
             // do not show the date/time above every message, only if the difference between the 2 messages is at least MIN_DATE_TIME_DIFF_SECS,
             // or if the message is sent from a different SIM
             val isSentFromDifferentKnownSIM =
@@ -1309,13 +1318,7 @@ class ThreadActivity : SimpleActivity() {
                 items.add(ThreadSending(message.id))
             }
 
-            if (!message.read) {
-                hadUnreadItems = true
-                markMessageRead(message.id, message.isMMS)
-                conversationsDB.markRead(threadId)
-            }
-
-            if (i == cnt - 1 && (message.type == Telephony.Sms.MESSAGE_TYPE_SENT)) {
+            if (i == displayedMessages.lastIndex && (message.type == Telephony.Sms.MESSAGE_TYPE_SENT)) {
                 items.add(
                     ThreadSent(
                         messageId = message.id,

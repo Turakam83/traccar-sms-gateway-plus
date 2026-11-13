@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="gateway_background_setup">Configure background operation</string>
+    <string name="gateway_background_open_settings">Open settings</string>
+    <string name="gateway_background_skip">Skip</string>
+    <string name="gateway_background_miui_battery">In the battery settings for Traccar SMS Gateway Plus, select No restrictions. If the app info page opens, look for Battery saver or Battery.</string>
+    <string name="gateway_background_miui_autostart">In Background autostart, enable Traccar SMS Gateway Plus. If the shortcut opens app info, look for Autostart there or under Settings → Apps → Permissions.</string>
+    <string name="gateway_background_exempt">Android battery optimization exemption is active.</string>
+    <string name="gateway_background_optimized">Android battery optimization exemption is inactive.</string>
+    <string name="gateway_background_miui_summary">Check that No restrictions and Background autostart are enabled in Xiaomi settings. These settings require manual confirmation.</string>
+    <string name="gateway_background_generic">If your phone has additional background limits, open the app settings and look for Battery or Background activity.</string>
+</resources>

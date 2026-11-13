@@ -29,7 +29,7 @@ class MessagingUtils(val context: Context) {
     /**
      * Insert an SMS to the given URI with thread_id specified.
      */
-    private fun insertSmsMessage(
+    internal fun insertSmsMessage(
         subId: Int,
         dest: String,
         text: String,

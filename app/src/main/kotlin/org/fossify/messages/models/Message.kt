@@ -28,6 +28,10 @@ data class Message(
     @ColumnInfo(name = "is_scheduled") var isScheduled: Boolean = false
 ) : ThreadItem() {
 
+    @androidx.room.Ignore
+    var displayedReactions: List<String> = emptyList()
+        internal set
+
     fun isReceivedMessage() = type == Telephony.Sms.MESSAGE_TYPE_INBOX
 
     fun millis() = date * 1000L
@@ -62,7 +66,8 @@ data class Message(
                 old.senderPhoneNumber == new.senderPhoneNumber &&
                 old.senderName == new.senderName &&
                 old.senderPhotoUri == new.senderPhotoUri &&
-                old.isScheduled == new.isScheduled
+                old.isScheduled == new.isScheduled &&
+                old.displayedReactions == new.displayedReactions
         }
     }
 }
